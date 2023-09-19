@@ -4,10 +4,10 @@ services:
   app:
     build: .
     command: uvicorn src.main:app --host 0.0.0.0 --port 8088
-    volumes:
-      - .:/src
     ports:
       - 8088:8088
+    env_file:
+      - .env
 
   db:
     image: postgres:15.3-alpine
