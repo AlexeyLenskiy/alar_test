@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 import uvicorn
 import os
+from sqlalchemy.orm import Session
 
-from src.db.settings import init_db 
+from src.db import data, settings, models
 
 app = FastAPI()
 host = os.getenv("APP_HOST")
@@ -16,7 +17,18 @@ async def check_root():
 
 @app.on_event("startup")
 async def on_startup():
-   await init_db()
+   await data.init_db()
+
+@app.get("/data", response_model=list[models.Data])
+async def get_data(db: Session = Depends(settings.get_db)):
+   return await data.get_sorted_data(
+       db, 
+       models=[
+           models.Data1Model, 
+           models.Data2Model, 
+           models.Data3Model,
+         ]
+      )
 
 if __name__ == '__main__':
     uvicorn.run(app='main:app', host=host, port=port, log_level='info')
