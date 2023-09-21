@@ -1,7 +1,7 @@
 from typing import Any, Generator
 import asyncpg
 import os
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 # Asyncpg
@@ -11,7 +11,7 @@ db_pool = asyncpg.create_pool(
     database=os.getenv("DBNAME"),
     host=os.getenv("DBHOST"),
     port=os.getenv("DBPORT"),
-    command_timeout=10,
+    command_timeout=60,
 )
 
 # SQLAlchemy

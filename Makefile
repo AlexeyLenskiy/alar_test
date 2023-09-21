@@ -12,3 +12,6 @@ start:
 
 stop:
 	docker-compose down
+
+test:
+	docker-compose run app pytest .
