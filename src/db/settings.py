@@ -1,8 +1,9 @@
-from typing import Any, Generator
-import asyncpg
 import os
+from typing import Any, Generator
+
+import asyncpg
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 # Asyncpg
 db_pool = asyncpg.create_pool(
@@ -24,7 +25,8 @@ engine = create_async_engine(SQLALCHEMY_URL)
 SessionLocal = async_sessionmaker(engine)
 Base = declarative_base()
 
-async def get_db() -> Generator[Any | None, Any, Any]:
+
+async def get_db() -> Generator[AsyncSession | None, Any, Any]:
     async with engine.begin() as con:
         await con.run_sync(Base.metadata.create_all)
     db = SessionLocal()
